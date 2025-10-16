@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automation Test Reports</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .refresh-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .main-container {
+            display: flex;
+            height: calc(100vh - 64px);
+        }
+
+        /* Left Navigation Bar */
+        .lnb {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tab-selector {
+            display: flex;
+            padding: 15px;
+            gap: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .report-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .report-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+
+        .report-item:hover {
+            background: #f8f9fa;
+        }
+
+        .report-item.selected {
+            background: #e3f2fd;
+            border-left: 3px solid #2196F3;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .status-dot.success {
+            background: #4CAF50;
+        }
+
+        .status-dot.failed {
+            background: #f44336;
+        }
+
+        .report-content {
+            flex: 1;
+        }
+
+        .report-date {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .report-meta {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .load-more {
+            padding: 12px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+            background: white;
+        }
+
+        .load-more button {
+            padding: 8px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .load-more button:hover {
+            background: #5568d3;
+        }
+
+        /* Main Report Viewer */
+        .report-viewer {
+            flex: 1;
+            background: white;
+            overflow: hidden;
+        }
+
+        .report-viewer iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Automation Test Reports</h1>
+        <button class="refresh-btn" onclick="location.reload()">🔄 Refresh</button>
+    </div>
+
+    <div class="main-container">
+        <!-- Left Navigation Bar -->
+        <div class="lnb">
+            <div class="tab-selector">
+                <button class="tab-btn active" data-tab="api">🚀 API</button>
+                <button class="tab-btn" data-tab="ui">🎭 UI</button>
+            </div>
+
+            <div class="report-list" id="report-list">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading reports...</p>
+                </div>
+            </div>
+
+            <div class="load-more" id="load-more" style="display: none;">
+                <button onclick="loadMoreReports()">Load More</button>
+            </div>
+        </div>
+
+        <!-- Main Report Viewer -->
+        <div class="report-viewer" id="report-viewer">
+            <div class="empty-state">
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                </svg>
+                <h3>Select a report to view</h3>
+                <p>Choose a report from the list on the left</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'api';
+        let allReports = { api: [], ui: [] };
+        let displayedCount = { api: 10, ui: 10 };
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTab = btn.dataset.tab;
+                renderReports();
+            });
+        });
+
+        // Load reports data
+        async function loadReports() {
+            try {
+                const response = await fetch('data/reports.json');
+                const data = await response.json();
+                allReports = data;
+                renderReports();
+            } catch (error) {
+                console.error('Error loading reports:', error);
+                document.getElementById('report-list').innerHTML = `
+                    <div class="empty-state">
+                        <p>Failed to load reports</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Format date: "2025-10-16 10:30:45" → "25/10/16 - 10:30"
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const yy = String(date.getFullYear()).slice(2);
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            const hh = String(date.getHours()).padStart(2, '0');
+            const min = String(date.getMinutes()).padStart(2, '0');
+            return `${yy}/${mm}/${dd} - ${hh}:${min}`;
+        }
+
+        // Render reports
+        function renderReports() {
+            const reports = allReports[currentTab] || [];
+            const count = displayedCount[currentTab];
+
+            if (reports.length === 0) {
+                document.getElementById('report-list').innerHTML = `
+                    <div class="empty-state">
+                        <p>No ${currentTab.toUpperCase()} reports available</p>
+                    </div>
+                `;
+                document.getElementById('load-more').style.display = 'none';
+                return;
+            }
+
+            // Sort by timestamp (newest first)
+            reports.sort((a, b) => b.id.localeCompare(a.id));
+
+            const displayReports = reports.slice(0, count);
+            const html = displayReports.map((report, index) => `
+                <div class="report-item ${index === 0 ? 'selected' : ''}"
+                     onclick="viewReport('${report.url}', this)">
+                    <div class="status-dot ${report.status}"></div>
+                    <div class="report-content">
+                        <div class="report-date">${formatDate(report.timestamp)}</div>
+                        <div class="report-meta">${report.environment} • ${report.duration}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('report-list').innerHTML = html;
+
+            // Show/hide Load More button
+            document.getElementById('load-more').style.display =
+                reports.length > count ? 'block' : 'none';
+
+            // Load first report automatically
+            if (displayReports.length > 0) {
+                viewReport(displayReports[0].url);
+            }
+        }
+
+        // View report
+        function viewReport(url, element) {
+            // Update selected state
+            document.querySelectorAll('.report-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            if (element) {
+                element.classList.add('selected');
+            }
+
+            // Load report in iframe
+            const viewer = document.getElementById('report-viewer');
+            viewer.innerHTML = `<iframe src="${url}"></iframe>`;
+        }
+
+        // Load more reports
+        function loadMoreReports() {
+            displayedCount[currentTab] += 10;
+            renderReports();
+        }
+
+        // Initialize
+        loadReports();
+    </script>
+</body>
+</html>
