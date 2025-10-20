@@ -157,5 +157,19 @@
       "url": "reports/api/api-20251016-1603.html"
     }
   ],
-  "ui": []
+  "ui": [
+    {
+      "id": "20251020-1556",
+      "timestamp": "2025-10-20 07:01:19",
+      "status": "failed",
+      "passed": 3,
+      "failed": 5,
+      "skipped": 0,
+      "total": 8,
+      "duration": "141.4s",
+      "environment": "Staging",
+      "trigger": "Manual",
+      "url": "reports/ui/ui-20251020-1556.html"
+    }
+  ]
 }
