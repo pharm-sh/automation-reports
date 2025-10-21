@@ -184,6 +184,19 @@
   "ui": [
     {
       "id": "20251021-0954",
+      "timestamp": "2025-10-21 01:01:12",
+      "status": "failed",
+      "passed": 2,
+      "failed": 6,
+      "skipped": 0,
+      "total": 8,
+      "duration": "153.0s",
+      "environment": "Staging",
+      "trigger": "Push",
+      "url": "reports/ui/ui-20251021-0954.html"
+    },
+    {
+      "id": "20251021-0954",
       "timestamp": "2025-10-21 01:01:05",
       "status": "failed",
       "passed": 2,
