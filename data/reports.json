@@ -327,6 +327,19 @@
   ],
   "ui": [
     {
+      "id": "20251201-1704",
+      "timestamp": "2025-12-01 08:11:52",
+      "status": "failed",
+      "passed": 7,
+      "failed": 6,
+      "skipped": 1,
+      "total": 14,
+      "duration": "220.0s",
+      "environment": "Staging",
+      "trigger": "Push",
+      "url": "reports/ui/ui-20251201-1704.html"
+    },
+    {
       "id": "20251201-1609",
       "timestamp": "2025-12-01 07:17:03",
       "status": "failed",
