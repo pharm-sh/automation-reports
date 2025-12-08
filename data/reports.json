@@ -1,6 +1,18 @@
 {
   "api": [
     {
+      "id": "20251208-0920",
+      "timestamp": "2025-12-08 00:20:43",
+      "status": "failed",
+      "passed": 1,
+      "failed": 1,
+      "total": 2,
+      "duration": "N/A",
+      "environment": "Staging",
+      "trigger": "Push",
+      "url": "reports/api/api-20251208-0920.html"
+    },
+    {
       "id": "20251205-1714",
       "timestamp": "2025-12-05 08:16:45",
       "status": "failed",
