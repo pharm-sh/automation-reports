@@ -423,6 +423,19 @@
   ],
   "ui": [
     {
+      "id": "20251208-1744",
+      "timestamp": "2025-12-08 08:50:55",
+      "status": "failed",
+      "passed": 8,
+      "failed": 4,
+      "skipped": 2,
+      "total": 14,
+      "duration": "225.8s",
+      "environment": "Staging",
+      "trigger": "Push",
+      "url": "reports/ui/ui-20251208-1744.html"
+    },
+    {
       "id": "20251208-1652",
       "timestamp": "2025-12-08 07:55:28",
       "status": "failed",
