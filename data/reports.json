@@ -435,6 +435,19 @@
   ],
   "ui": [
     {
+      "id": "20260422-1603",
+      "timestamp": "2026-04-22 07:16:28",
+      "status": "failed",
+      "passed": 3,
+      "failed": 8,
+      "skipped": 3,
+      "total": 14,
+      "duration": "190.7s",
+      "environment": "Staging",
+      "trigger": "Push",
+      "url": "reports/ui/ui-20260422-1603.html"
+    },
+    {
       "id": "20251208-1744",
       "timestamp": "2025-12-08 08:50:55",
       "status": "failed",
